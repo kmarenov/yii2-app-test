@@ -34,14 +34,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => Teacher::getGendersList()
             ],
             'phone',
-//            [
-//                'attribute'=>'students_count',
-//                'label'=>'Количество учеников',
-//                'format'=>'text',
-//                'content'=>function($data){
-//                    return $data->getStudents()->count();
-//                },
-//            ],
+            [
+                'attribute' => 'studentsCount',
+                'label' => 'Количество учеников',
+                'format' => 'text',
+                'content' => function ($data) {
+                    return $data->getStudents()->count();
+                },
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 /*
