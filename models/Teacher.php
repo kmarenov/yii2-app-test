@@ -47,6 +47,16 @@ class Teacher extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getGenderName()
+    {
+        return self::getGendersList()[$this->gender];
+    }
+
+    public static function getGendersList()
+    {
+        return [1 => 'Мужской', 2 => 'Женский'];
+    }
+
     public function getStudents()
     {
         return $this->hasMany(Student::className(), ['id' => 'student_id'])
