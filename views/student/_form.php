@@ -1,5 +1,7 @@
 <?php
 
+use app\models\Student;
+use dosamigos\datepicker\DatePicker;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -16,12 +18,21 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'birthdate')->textInput() ?>
+    <?= $form->field($model, 'birthdate')->widget(
+        DatePicker::className(), [
+        'inline' => true,
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'language' => 'ru',
+        'clientOptions' => [
+            'autoclose' => true,
+            'format' => 'yyyy-mm-dd'
+        ]
+    ]); ?>
 
-    <?= $form->field($model, 'level')->textInput() ?>
+    <?= $form->field($model, 'level')->dropDownList(Student::getLevelsList()) ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update',
+        <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить',
             ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 

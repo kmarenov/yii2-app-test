@@ -64,7 +64,7 @@ class Teacher extends \yii\db\ActiveRecord
 
     public function getGenderName()
     {
-        return self::getGendersList()[$this->gender];
+        return static::getGendersList()[$this->gender];
     }
 
     public static function getGendersList()
