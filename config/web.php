@@ -40,6 +40,8 @@ $config = [
         'db' => require(__DIR__ . '/db.php'),
     ],
     'params' => $params,
+    'language' => 'ru-RU',
+    'defaultRoute' => 'teacher/index',
 ];
 
 if (YII_ENV_DEV) {
@@ -52,6 +54,7 @@ if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
+        //'allowedIPs' => ['*']
     ];
 }
 
