@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use voskobovich\behaviors\ManyToManyBehavior;
 use Yii;
 
 /**
@@ -22,6 +23,18 @@ class Teacher extends \yii\db\ActiveRecord
         return 'teacher';
     }
 
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => ManyToManyBehavior::className(),
+                'relations' => [
+                    'students_list' => 'students',
+                ],
+            ],
+        ];
+    }
+
     /**
      * @inheritdoc
      */
@@ -30,7 +43,8 @@ class Teacher extends \yii\db\ActiveRecord
         return [
             [['name', 'gender'], 'required'],
             [['gender'], 'integer'],
-            [['name', 'phone'], 'string', 'max' => 255]
+            [['name', 'phone'], 'string', 'max' => 255],
+            ['students_list', 'safe']
         ];
     }
 
@@ -44,6 +58,7 @@ class Teacher extends \yii\db\ActiveRecord
             'name' => 'Имя',
             'gender' => 'Пол',
             'phone' => 'Номер телефона',
+            'students_list' => 'Ученики',
         ];
     }
 

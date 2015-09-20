@@ -1,6 +1,8 @@
 <?php
 
+use app\models\Student;
 use app\models\Teacher;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -18,6 +20,9 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'gender')->dropDownList(Teacher::getGendersList()) ?>
 
     <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'students_list')
+        ->dropDownList(ArrayHelper::map(Student::find()->all(), 'id', 'name'), ['multiple' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить',
