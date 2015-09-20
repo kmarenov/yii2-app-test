@@ -7,6 +7,7 @@ class m150919_090053_create_teacher_student_table extends Migration
     public function up()
     {
         $this->createTable('teacher_student', [
+            'id' => $this->primaryKey(),
             'teacher_id' => $this->integer()->notNull(),
             'student_id' => $this->integer()->notNull(),
         ]);
