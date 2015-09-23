@@ -13,7 +13,6 @@ $config = [
         'db' => require(__DIR__ . '/db.php'),
     ],
     'language' => 'ru-RU',
-    'defaultRoute' => 'teacher/index',
 ];
 
 if (YII_ENV_DEV) {

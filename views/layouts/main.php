@@ -4,7 +4,6 @@
 /* @var $content string */
 
 use app\assets\AppAsset;
-use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
@@ -33,6 +32,7 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+    /*
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
@@ -40,6 +40,7 @@ AppAsset::register($this);
             ['label' => 'Ученики', 'url' => ['/student/index']],
         ],
     ]);
+    */
     NavBar::end();
     ?>
 
