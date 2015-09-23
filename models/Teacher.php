@@ -30,6 +30,13 @@ class Teacher extends \yii\db\ActiveRecord
                 'class' => ManyToManyBehavior::className(),
                 'relations' => [
                     'students_list' => 'students',
+                    'students_count' =>
+                        [
+                            'students',
+                            'get' => function ($value) {
+                                return count($value);
+                            }
+                        ]
                 ],
             ],
         ];
@@ -60,6 +67,7 @@ class Teacher extends \yii\db\ActiveRecord
             'gender' => 'Пол',
             'phone' => 'Номер телефона',
             'students_list' => 'Ученики',
+            'students_count' => 'Количество учеников',
         ];
     }
 

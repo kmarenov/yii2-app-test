@@ -35,10 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => $model->getGenderName(),
             ],
             'phone',
-            [
-                'label' => 'Учеников',
-                'value' => count($model->students_list),
-            ],
+            'students_count'
         ],
     ]) ?>
 
