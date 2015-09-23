@@ -39,17 +39,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Количество учеников',
                 'format' => 'text',
                 'content' => function ($data) {
-                    return $data->getStudents()->count();
-                },
+                    return count($data->students_list);
+                }
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                /*
-                'buttons' => [
-                    'delete' => function(){},
-                    'view' => function(){},
-                ]
-                */
             ],
         ],
     ]); ?>

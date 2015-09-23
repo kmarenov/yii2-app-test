@@ -22,8 +22,12 @@ use yii\widgets\MaskedInput;
 
     <?= $form->field($model, 'phone')->widget(MaskedInput::classname(), ['mask' => '+79999999999']) ?>
 
-    <?= $form->field($model, 'students_list')
-        ->dropDownList(ArrayHelper::map(Student::find()->all(), 'id', 'name'), ['multiple' => true]) ?>
+    <?= $form->field($model, 'students_list')->widget(kartik\select2\Select2::className(),
+        [
+            'data' => ArrayHelper::map(Student::find()->orderBy('name')->all(), 'id', 'name'),
+            'options' => ['placeholder' => 'Выберите учеников ...', 'multiple' => true],
+        ]);
+    ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить',

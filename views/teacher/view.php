@@ -1,6 +1,5 @@
 <?php
 
-use app\models\Student;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -37,11 +36,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'phone',
             [
-                'attribute' => 'students_list',
-                'value' => implode('<br />', array_map(function ($student_id) {
-                    return Student::findOne($student_id)->name;
-                }, $model->students_list)),
-                'format' => 'html'
+                'label' => 'Учеников',
+                'value' => count($model->students_list),
             ],
         ],
     ]) ?>
