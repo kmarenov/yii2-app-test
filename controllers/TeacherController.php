@@ -41,6 +41,26 @@ class TeacherController extends Controller
         ]);
     }
 
+    public function actionApril()
+    {
+        $sql = 'SELECT t.id, t.name, t.gender, t.phone FROM teacher t WHERE t.id IN (
+                  SELECT DISTINCT ts1.teacher_id FROM teacher_student ts1
+                  WHERE ts1.student_id IN (SELECT s.id FROM student s WHERE MONTH(s.birthdate) = 4)
+                  GROUP BY ts1.teacher_id
+                  HAVING COUNT(ts1.teacher_id) = (
+                    SELECT DISTINCT COUNT(ts2.teacher_id) FROM teacher_student ts2
+                    WHERE ts1.teacher_id = ts2.teacher_id)
+                )';
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => Teacher::findBySql($sql),
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
     /**
      * Displays a single Teacher model.
      * @param integer $id
