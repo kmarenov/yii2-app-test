@@ -32,6 +32,8 @@ class TeacherController extends Controller
      */
     public function actionIndex()
     {
+        $title = 'Учителя';
+
         $dataProvider = new ActiveDataProvider([
             'query' => Teacher::find(),
         ]);
@@ -42,11 +44,14 @@ class TeacherController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'title' => $title
         ]);
     }
 
     public function actionApril()
     {
+        $title = 'Список учителей, с которыми занимаются только ученики, родившиеся в апреле';
+
         $sql = 'SELECT t.id, t.name, t.gender, t.phone FROM teacher t WHERE t.id IN (
                   SELECT DISTINCT ts1.teacher_id FROM teacher_student ts1
                   WHERE ts1.student_id IN (SELECT s.id FROM student s WHERE MONTH(s.birthdate) = 4)
@@ -66,6 +71,7 @@ class TeacherController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'title' => $title
         ]);
     }
 
