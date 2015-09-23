@@ -1,33 +1,26 @@
 {
-  "name": "yiisoft/yii2-app-basic",
-  "description": "Yii 2 Basic Project Template",
+  "name": "kmarenov/yii2-app-test",
+  "description": "Yii 2 Test Application",
   "keywords": [
     "yii2",
     "framework",
-    "basic",
-    "project template"
+    "test project"
   ],
   "homepage": "http://www.yiiframework.com/",
   "type": "project",
   "license": "BSD-3-Clause",
   "support": {
-    "issues": "https://github.com/yiisoft/yii2/issues?state=open",
-    "forum": "http://www.yiiframework.com/forum/",
-    "wiki": "http://www.yiiframework.com/wiki/",
-    "irc": "irc://irc.freenode.net/yii",
-    "source": "https://github.com/yiisoft/yii2"
+    "source": "https://github.com/kmarenov/yii2-app-test"
   },
   "minimum-stability": "stable",
   "require": {
     "php": ">=5.4.0",
-    "yiisoft/yii2": ">=2.0.5",
+    "yiisoft/yii2": ">=2.0.6",
     "yiisoft/yii2-bootstrap": "*",
-    "yiisoft/yii2-swiftmailer": "*",
     "voskobovich/yii2-many-many-behavior": "*",
     "2amigos/yii2-date-picker-widget": "*"
   },
   "require-dev": {
-    "yiisoft/yii2-codeception": "*",
     "yiisoft/yii2-debug": "*",
     "yiisoft/yii2-gii": "*",
     "yiisoft/yii2-faker": "*"
