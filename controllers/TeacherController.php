@@ -75,6 +75,30 @@ class TeacherController extends Controller
         ]);
     }
 
+    public function actionMaxCommonStudents()
+    {
+        $title = '';
+
+        $sql = 'SELECT ts1.student_id
+                FROM teacher_student ts1
+                WHERE ts1.teacher_id IN (1,2)
+                GROUP BY ts1.student_id
+                HAVING COUNT(ts1.student_id) > 1';
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => Teacher::findBySql($sql),
+        ]);
+
+        $dataProvider->setSort([
+            'defaultOrder' => ['name' => SORT_ASC]
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+            'title' => $title
+        ]);
+    }
+
     /**
      * Displays a single Teacher model.
      * @param integer $id
