@@ -42,9 +42,10 @@ class Teacher extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'gender'], 'required'],
-            [['gender'], 'integer'],
-            [['name', 'phone'], 'string', 'max' => 255],
-            ['students_list', 'safe']
+            [['gender'], 'integer', 'min' => 1, 'max' => 2],
+            [['name'], 'string', 'max' => 255],
+            ['students_list', 'each', 'rule' => ['integer']],
+            ['phone', 'borales\extensions\phoneInput\PhoneInputValidator']
         ];
     }
 

@@ -30,9 +30,10 @@ class Student extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'birthdate'], 'required'],
-            [['birthdate'], 'safe'],
-            [['level'], 'integer'],
-            [['name', 'email'], 'string', 'max' => 255]
+            [['birthdate'], 'date', 'format' => 'yyyy-mm-dd'],
+            [['level'], 'integer', 'min' => 1, 'max' => 6],
+            [['email'], 'email'],
+            [['name'], 'string', 'max' => 255]
         ];
     }
 

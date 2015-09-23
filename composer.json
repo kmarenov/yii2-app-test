@@ -18,7 +18,8 @@
     "yiisoft/yii2": ">=2.0.6",
     "yiisoft/yii2-bootstrap": "*",
     "voskobovich/yii2-many-many-behavior": "*",
-    "2amigos/yii2-date-picker-widget": "*"
+    "2amigos/yii2-date-picker-widget": "*",
+    "borales/yii2-phone-input": "*"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "*",

@@ -4,6 +4,7 @@ use app\models\Student;
 use dosamigos\datepicker\DatePicker;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\widgets\MaskedInput;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Student */
@@ -16,7 +17,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'email')->widget(MaskedInput::classname(), ['clientOptions' => ['alias' => 'email']]) ?>
 
     <?= $form->field($model, 'birthdate')->widget(
         DatePicker::className(), [
