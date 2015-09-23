@@ -60,6 +60,10 @@ class TeacherController extends Controller
             'query' => Teacher::findBySql($sql),
         ]);
 
+        $dataProvider->setSort([
+            'defaultOrder' => ['name' => SORT_ASC]
+        ]);
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
