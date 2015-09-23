@@ -36,6 +36,10 @@ class StudentController extends Controller
             'query' => Student::find(),
         ]);
 
+        $dataProvider->setSort([
+            'defaultOrder' => ['name' => SORT_ASC]
+        ]);
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
