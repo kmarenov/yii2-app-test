@@ -81,9 +81,28 @@ class TeacherController extends Controller
 
         $sql = 'SELECT ts1.student_id
                 FROM teacher_student ts1
-                WHERE ts1.teacher_id IN (1,2)
+                WHERE ts1.teacher_id IN (3,9)
                 GROUP BY ts1.student_id
                 HAVING COUNT(ts1.student_id) > 1';
+
+        $sql = 'SELECT
+                t1.name AS tname1,
+                t2.name AS tname2,
+                COALESCE(s.common, 0) AS common
+                FROM teacher t1
+                    INNER JOIN teacher t2 ON t1.id < t2.id
+                    LEFT JOIN (
+                        SELECT
+                            ts1.teacher_id AS t1_id,
+                            ts2.teacher_id AS t2_id,
+                            COUNT(ts1.student_id) AS common
+                        FROM teacher_student ts1, teacher_student ts2
+                        WHERE ts1.student_id = ts2.student_id
+                            AND ts1.teacher_id < ts2.teacher_id
+                        GROUP BY ts1.teacher_id, ts2.teacher_id
+                    ) s
+                    ON (s.t1_id = t1.id AND s.t2_id = t2.id)
+                ORDER BY common DESC LIMIT 1';
 
         $dataProvider = new ActiveDataProvider([
             'query' => Teacher::findBySql($sql),
