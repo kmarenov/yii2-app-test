@@ -52,57 +52,25 @@ class TeacherController extends Controller
     {
         $title = 'Список учителей, с которыми занимаются только ученики, родившиеся в апреле';
 
-        $sql = 'SELECT t.id, t.name, t.gender, t.phone FROM teacher t WHERE t.id IN (
-                  SELECT DISTINCT ts1.teacher_id FROM teacher_student ts1
-                  WHERE ts1.student_id IN (SELECT s.id FROM student s WHERE MONTH(s.birthdate) = 4)
-                  GROUP BY ts1.teacher_id
-                  HAVING COUNT(ts1.teacher_id) = (
-                    SELECT DISTINCT COUNT(ts2.teacher_id) FROM teacher_student ts2
-                    WHERE ts1.teacher_id = ts2.teacher_id)
-                )';
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => Teacher::findBySql($sql),
-        ]);
-
-        $dataProvider->setSort([
-            'defaultOrder' => ['name' => SORT_ASC]
-        ]);
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-            'title' => $title
-        ]);
-    }
-
-    public function actionMaxCommonStudents()
-    {
-        $title = '';
-
-        $sql = 'SELECT ts1.student_id
-                FROM teacher_student ts1
-                WHERE ts1.teacher_id IN (3,9)
-                GROUP BY ts1.student_id
-                HAVING COUNT(ts1.student_id) > 1';
-
-        $sql = 'SELECT
-                t1.name AS tname1,
-                t2.name AS tname2,
-                COALESCE(s.common, 0) AS common
-                FROM teacher t1
-                    INNER JOIN teacher t2 ON t1.id < t2.id
-                    LEFT JOIN (
-                        SELECT
-                            ts1.teacher_id AS t1_id,
-                            ts2.teacher_id AS t2_id,
-                            COUNT(ts1.student_id) AS common
-                        FROM teacher_student ts1, teacher_student ts2
-                        WHERE ts1.student_id = ts2.student_id
-                            AND ts1.teacher_id < ts2.teacher_id
-                        GROUP BY ts1.teacher_id, ts2.teacher_id
-                    ) s
-                    ON (s.t1_id = t1.id AND s.t2_id = t2.id)
-                ORDER BY common DESC LIMIT 1';
+        $sql = '
+            SELECT t.id,
+                   t.name,
+                   t.gender,
+                   t.phone
+            FROM teacher t
+            WHERE t.id IN
+                ( SELECT DISTINCT ts1.teacher_id
+                 FROM teacher_student ts1
+                 WHERE ts1.student_id IN
+                     (SELECT s.id
+                      FROM student s
+                      WHERE MONTH(s.birthdate) = 4)
+                 GROUP BY ts1.teacher_id
+                 HAVING COUNT(ts1.teacher_id) =
+                   ( SELECT DISTINCT COUNT(ts2.teacher_id)
+                    FROM teacher_student ts2
+                    WHERE ts1.teacher_id = ts2.teacher_id) )
+          ';
 
         $dataProvider = new ActiveDataProvider([
             'query' => Teacher::findBySql($sql),
