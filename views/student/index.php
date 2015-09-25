@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php endif; ?>
 
     <?php if (!empty($teachers)): ?>
-        <h2>Учителя:</h2>
+        <h2>Учителя</h2>
         <ul>
             <li><h3><?= $teachers['tname1'] ?></h3></li>
             <li><h3><?= $teachers['tname2'] ?></h3></li>
