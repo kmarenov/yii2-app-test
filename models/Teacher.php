@@ -52,7 +52,12 @@ class Teacher extends \yii\db\ActiveRecord
             [['gender'], 'integer', 'min' => 1, 'max' => 2],
             [['name'], 'string', 'max' => 255],
             ['students_list', 'each', 'rule' => ['integer']],
-            ['phone', 'borales\extensions\phoneInput\PhoneInputValidator']
+            [
+                'phone',
+                'match',
+                'pattern' => '/^[0-9+\(\)#\.\s\/ext-]+$/',
+                'message' => 'Значение «Номер телефона» не является правильным номером телефона.'
+            ]
         ];
     }
 

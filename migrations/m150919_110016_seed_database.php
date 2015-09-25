@@ -4,17 +4,11 @@ use Faker\Factory;
 use yii\db\Migration;
 use yii\db\Query;
 
-class PhoneNumber extends \Faker\Provider\PhoneNumber
-{
-    protected static $formats = ['+79#########'];
-}
-
 class m150919_110016_seed_database extends Migration
 {
     public function up()
     {
         $faker = Factory::create();
-        $faker->addProvider(new PhoneNumber($faker));
 
         $query = new Query();
 

@@ -19,7 +19,6 @@
     "yiisoft/yii2-bootstrap": "*",
     "voskobovich/yii2-many-many-behavior": "*",
     "2amigos/yii2-date-picker-widget": "*",
-    "borales/yii2-phone-input": "*",
     "kartik-v/yii2-widget-select2": "*"
   },
   "require-dev": {
