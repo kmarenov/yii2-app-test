@@ -35,11 +35,24 @@ class TeacherController extends Controller
         $title = 'Учителя';
 
         $dataProvider = new ActiveDataProvider([
-            'query' => Teacher::find(),
+            'query' => Teacher::find()->select('id, name, gender, phone, s.cnt as stud_cnt')
+                ->join('LEFT JOIN',
+                    '(SELECT DISTINCT ts.teacher_id AS t_id, COUNT(ts.student_id) AS cnt FROM teacher_student ts GROUP BY ts.teacher_id) s',
+                    's.t_id = id')
         ]);
 
         $dataProvider->setSort([
-            'defaultOrder' => ['name' => SORT_ASC]
+            'defaultOrder' => ['name' => SORT_ASC],
+            'attributes' => [
+                'name',
+                'gender',
+                'phone',
+                'students_count' =>
+                    [
+                        'asc' => ['stud_cnt' => SORT_ASC],
+                        'desc' => ['stud_cnt' => SORT_DESC]
+                    ]
+            ]
         ]);
 
         return $this->render('index', [
