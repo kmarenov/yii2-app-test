@@ -32,6 +32,8 @@ class StudentController extends Controller
      */
     public function actionIndex()
     {
+        $title = 'Ученики';
+
         $dataProvider = new ActiveDataProvider([
             'query' => Student::find(),
         ]);
@@ -42,6 +44,7 @@ class StudentController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'title' => $title
         ]);
     }
 
@@ -121,5 +124,64 @@ class StudentController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionTeachersWithMaxCommonStudents()
+    {
+        $title = 'Имена любых двух учителей, у которых максимальное количество общих учеников, и список этих общих учеников';
+
+        $teachers = Yii::$app->getDb()->createCommand('
+            SELECT
+            t1.id AS tid1,
+            t1.name AS tname1,
+            t2.id AS tid2,
+            t2.name AS tname2,
+            s.common AS common
+            FROM teacher t1
+                INNER JOIN teacher t2 ON t1.id < t2.id
+                LEFT JOIN (
+                    SELECT DISTINCT
+                        ts1.teacher_id AS t1_id,
+                        ts2.teacher_id AS t2_id,
+                        COUNT(ts1.student_id) AS common
+                    FROM teacher_student ts1, teacher_student ts2
+                    WHERE ts1.student_id = ts2.student_id
+                        AND ts1.teacher_id < ts2.teacher_id
+                    GROUP BY ts1.teacher_id, ts2.teacher_id
+                ) s
+                ON (s.t1_id = t1.id AND s.t2_id = t2.id)
+            ORDER BY common DESC LIMIT 1
+        ')->query()->read();
+
+        $common_students_sql = '
+            SELECT s.id,
+                   s.name,
+                   s.birthdate,
+                   s.email,
+                   s.level
+            FROM student s
+            WHERE s.id IN
+                (SELECT DISTINCT ts1.student_id
+                 FROM teacher_student ts1,
+                      teacher_student ts2
+                 WHERE ts1.student_id = ts2.student_id
+                   AND ts1.teacher_id =:tid1
+                   AND ts2.teacher_id = :tid2)
+        ';
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => Student::findBySql($common_students_sql,
+                array_intersect_key($teachers, array_flip(['tid1', 'tid2']))),
+        ]);
+
+        $dataProvider->setSort([
+            'defaultOrder' => ['name' => SORT_ASC]
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+            'title' => $title,
+            'teachers' => $teachers
+        ]);
     }
 }
