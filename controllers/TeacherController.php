@@ -34,10 +34,18 @@ class TeacherController extends Controller
     {
         $title = 'Учителя';
 
+        //количество учеников у каждого учителя
+        $studentsCountSql = '
+            SELECT DISTINCT ts.teacher_id AS t_id,
+                    COUNT(ts.student_id) AS cnt
+            FROM teacher_student ts
+            GROUP BY ts.teacher_id
+        ';
+
         $dataProvider = new ActiveDataProvider([
             'query' => Teacher::find()->select('id, name, gender, phone, s.cnt as stud_cnt')
                 ->join('LEFT JOIN',
-                    '(SELECT DISTINCT ts.teacher_id AS t_id, COUNT(ts.student_id) AS cnt FROM teacher_student ts GROUP BY ts.teacher_id) s',
+                    '(' . $studentsCountSql . ') s',
                     's.t_id = id')
         ]);
 
@@ -61,6 +69,10 @@ class TeacherController extends Controller
         ]);
     }
 
+    /**
+     * Список учителей, с которыми занимаются только ученики, родившиеся в апреле.
+     * @return mixed
+     */
     public function actionApril()
     {
         $title = 'Список учителей, с которыми занимаются только ученики, родившиеся в апреле';
