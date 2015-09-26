@@ -12,10 +12,11 @@ class m150919_110016_seed_database extends Migration
 
         $query = new Query();
 
-        define('TEACHERS_COUNT', 10);
-        define('STUDENTS_COUNT', 100);
+        define('TEACHERS_COUNT', 10000);
+        define('STUDENTS_COUNT', 100000);
         define('GENDERS_COUNT', 2);
         define('LEVELS_COUNT', 6);
+        define('MAX_RELATIONS_COUNT', 50);
 
         for ($i = 1; $i <= TEACHERS_COUNT; $i++) {
             $this->insert('teacher', [
@@ -24,7 +25,7 @@ class m150919_110016_seed_database extends Migration
                 'phone' => $faker->phoneNumber,
             ]);
 
-            $relationsCount = rand(1, STUDENTS_COUNT);
+            $relationsCount = rand(0, MAX_RELATIONS_COUNT);
 
             for ($j = 1; $j <= $relationsCount; $j++) {
                 $attributes = [
