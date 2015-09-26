@@ -50,17 +50,14 @@ class TeacherController extends Controller
 
         $dataProvider->setSort([
             'defaultOrder' => ['name' => SORT_ASC],
-            'attributes' => [
-                'name',
-                'gender',
-                'phone',
-                'students_count' =>
-                    [
-                        'asc' => ['stud_cnt' => SORT_ASC],
-                        'desc' => ['stud_cnt' => SORT_DESC]
-                    ]
-            ]
         ]);
+
+        $dataProvider->sort->attributes['students_count'] = [
+            [
+                'asc' => ['stud_cnt' => SORT_ASC],
+                'desc' => ['stud_cnt' => SORT_DESC]
+            ]
+        ];
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -107,17 +104,14 @@ class TeacherController extends Controller
 
         $dataProvider->setSort([
             'defaultOrder' => ['name' => SORT_ASC],
-            'attributes' => [
-                'name',
-                'gender',
-                'phone',
-                'students_count' =>
-                    [
-                        'asc' => ['stud_cnt' => SORT_ASC],
-                        'desc' => ['stud_cnt' => SORT_DESC]
-                    ]
-            ]
         ]);
+
+        $dataProvider->sort->attributes['students_count'] = [
+            [
+                'asc' => ['stud_cnt' => SORT_ASC],
+                'desc' => ['stud_cnt' => SORT_DESC]
+            ]
+        ];
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
