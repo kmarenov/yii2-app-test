@@ -159,7 +159,7 @@ class StudentController extends Controller
             ORDER BY common DESC LIMIT 1
         ';
 
-        $twoTeachersMaxStudents = Yii::$app->getDb()->createCommand($twoTeachersMaxStudentsSql)->query()->read();
+        $twoTeachersMaxStudents = Yii::$app->db->createCommand($twoTeachersMaxStudentsSql)->query()->read();
 
         //общие ученики двух заданных учителей
         $commonStudentsSql = '
@@ -171,7 +171,7 @@ class StudentController extends Controller
                    AND ts2.teacher_id = :tid2
         ';
 
-        $commonStudents = Yii::$app->getDb()->createCommand($commonStudentsSql, [
+        $commonStudents = Yii::$app->db->createCommand($commonStudentsSql, [
             'tid1' => $twoTeachersMaxStudents['tid1'],
             'tid2' => $twoTeachersMaxStudents['tid2'],
         ])->query()->readAll();

@@ -91,7 +91,7 @@ class TeacherController extends Controller
                     WHERE ts1.teacher_id = ts2.teacher_id)
           ';
 
-        $teachersAprilStudents = Yii::$app->getDb()->createCommand($teachersAprilStudentsSql)->query()->readAll();
+        $teachersAprilStudents = Yii::$app->db->createCommand($teachersAprilStudentsSql)->query()->readAll();
 
         $teachersAprilStudentsIds = ArrayHelper::getColumn($teachersAprilStudents, function ($element) {
             return $element['tid'];
