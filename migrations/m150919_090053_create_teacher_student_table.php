@@ -14,6 +14,7 @@ class m150919_090053_create_teacher_student_table extends Migration
 
         $this->createIndex('teacher_id', 'teacher_student', 'teacher_id');
         $this->createIndex('student_id', 'teacher_student', 'student_id');
+        $this->createIndex('teacher_id_student_id', 'teacher_student', ['teacher_id', 'student_id']);
     }
 
     public function down()
