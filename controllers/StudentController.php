@@ -6,6 +6,7 @@ use app\models\Student;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -126,11 +127,16 @@ class StudentController extends Controller
         return $this->redirect(['index']);
     }
 
+    /**
+     * Имена любых двух учителей, у которых максимальное количество общих учеников, и список этих общих учеников.
+     * @return mixed
+     */
     public function actionTeachersWithMaxCommonStudents()
     {
         $title = 'Имена любых двух учителей, у которых максимальное количество общих учеников, и список этих общих учеников';
 
-        $teachers = Yii::$app->getDb()->createCommand('
+        //два учителя, у которых максимальное количество общих учеников
+        $twoTeachersMaxStudentsSql = '
             SELECT
             t1.id AS tid1,
             t1.name AS tname1,
@@ -151,27 +157,35 @@ class StudentController extends Controller
                 ) s
                 ON (s.t1_id = t1.id AND s.t2_id = t2.id)
             ORDER BY common DESC LIMIT 1
-        ')->query()->read();
+        ';
 
-        $common_students_sql = '
-            SELECT s.id,
-                   s.name,
-                   s.birthdate,
-                   s.email,
-                   s.level
-            FROM student s
-            WHERE s.id IN
-                (SELECT DISTINCT ts1.student_id
+        $twoTeachersMaxStudents = Yii::$app->getDb()->createCommand($twoTeachersMaxStudentsSql)->query()->read();
+
+        //общие ученики двух заданных учителей
+        $commonStudentsSql = '
+                SELECT DISTINCT ts1.student_id
                  FROM teacher_student ts1,
                       teacher_student ts2
                  WHERE ts1.student_id = ts2.student_id
                    AND ts1.teacher_id =:tid1
-                   AND ts2.teacher_id = :tid2)
+                   AND ts2.teacher_id = :tid2
         ';
 
+        $commonStudents = Yii::$app->getDb()->createCommand($commonStudentsSql, [
+            'tid1' => $twoTeachersMaxStudents['tid1'],
+            'tid2' => $twoTeachersMaxStudents['tid2'],
+        ])->query()->readAll();
+
+        $commonStudentsIds = ArrayHelper::getColumn($commonStudents, function ($element) {
+            return $element['student_id'];
+        });
+
         $dataProvider = new ActiveDataProvider([
-            'query' => Student::findBySql($common_students_sql,
-                array_intersect_key($teachers, array_flip(['tid1', 'tid2']))),
+            'query' => Student::find()->select('id, name, birthdate, email, level')->where([
+                'in',
+                'id',
+                $commonStudentsIds
+            ])
         ]);
 
         $dataProvider->setSort([
@@ -181,7 +195,7 @@ class StudentController extends Controller
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'title' => $title,
-            'teachers' => $teachers
+            'teachers' => $twoTeachersMaxStudents
         ]);
     }
 }
