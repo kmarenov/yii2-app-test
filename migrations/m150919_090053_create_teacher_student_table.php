@@ -21,6 +21,7 @@ class m150919_090053_create_teacher_student_table extends Migration
     {
         $this->dropIndex('teacher_id', 'teacher_student');
         $this->dropIndex('student_id', 'teacher_student');
+        $this->dropIndex('teacher_id_student_id', 'teacher_student');
 
         $this->dropTable('teacher_student');
     }
