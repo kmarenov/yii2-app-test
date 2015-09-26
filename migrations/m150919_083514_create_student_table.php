@@ -13,10 +13,19 @@ class m150919_083514_create_student_table extends Migration
             'birthdate' => $this->date()->notNull(),
             'level' => $this->smallInteger(),
         ]);
+
+        $this->createIndex('name', 'student', 'name');
+        $this->createIndex('birthdate', 'student', 'birthdate');
+        $this->createIndex('level', 'student', 'level');
     }
 
     public function down()
     {
+        $this->dropIndex('name', 'student');
+        $this->dropIndex('email', 'student');
+        $this->dropIndex('birthdate', 'student');
+        $this->dropIndex('level', 'student');
+
         $this->dropTable('student');
     }
 }

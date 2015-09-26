@@ -11,10 +11,16 @@ class m150919_090053_create_teacher_student_table extends Migration
             'teacher_id' => $this->integer()->notNull(),
             'student_id' => $this->integer()->notNull(),
         ]);
+
+        $this->createIndex('teacher_id', 'teacher_student', 'teacher_id');
+        $this->createIndex('student_id', 'teacher_student', 'student_id');
     }
 
     public function down()
     {
+        $this->dropIndex('teacher_id', 'teacher_student');
+        $this->dropIndex('student_id', 'teacher_student');
+
         $this->dropTable('teacher_student');
     }
 }
