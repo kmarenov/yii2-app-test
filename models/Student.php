@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "student".
@@ -21,6 +22,38 @@ class Student extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'student';
+    }
+
+    /**
+     * Общие ученики двух заданных учителей
+     * @param array $teachers
+     * @return $this
+     */
+    public static function commonFromTwoTeachers($teachers)
+    {
+        $commonStudentsSql = '
+                SELECT DISTINCT ts1.student_id
+                 FROM teacher_student ts1,
+                      teacher_student ts2
+                 WHERE ts1.student_id = ts2.student_id
+                   AND ts1.teacher_id =:tid1
+                   AND ts2.teacher_id = :tid2
+        ';
+
+        $commonStudents = Yii::$app->db->createCommand($commonStudentsSql, [
+            'tid1' => $teachers['tid1'],
+            'tid2' => $teachers['tid2'],
+        ])->query()->readAll();
+
+        $commonStudentsIds = ArrayHelper::getColumn($commonStudents, function ($element) {
+            return $element['student_id'];
+        });
+
+        return self::find()->select('id, name, birthdate, email, level')->where([
+            'in',
+            'id',
+            $commonStudentsIds
+        ]);
     }
 
     /**

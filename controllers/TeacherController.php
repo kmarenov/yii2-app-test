@@ -6,7 +6,6 @@ use app\models\Teacher;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -15,14 +14,6 @@ use yii\web\NotFoundHttpException;
  */
 class TeacherController extends Controller
 {
-    //количество учеников у каждого учителя
-    public $studentsCountSql = '
-            SELECT DISTINCT ts.teacher_id AS tid,
-                    COUNT(ts.student_id) AS cnt
-            FROM teacher_student ts
-            GROUP BY ts.teacher_id
-    ';
-
     public function behaviors()
     {
         return [
@@ -45,7 +36,7 @@ class TeacherController extends Controller
 
         $dataProvider = new ActiveDataProvider([
             'query' => Teacher::find()->select('id, name, gender, phone, s.cnt as stud_cnt')
-                ->join('LEFT JOIN', '(' . $this->studentsCountSql . ') s', 's.tid = id')
+                ->join('LEFT JOIN', '(' . Teacher::studentsCountSql . ') s', 's.tid = id')
         ]);
 
         $dataProvider->setSort([
@@ -73,33 +64,8 @@ class TeacherController extends Controller
     {
         $title = 'Список учителей, с которыми занимаются только ученики, родившиеся в апреле';
 
-        //учителя, с которыми занимаются только ученики, родившиеся в апреле
-        $teachersAprilStudentsSql = '
-          SELECT DISTINCT ts1.teacher_id AS tid
-                 FROM teacher_student ts1
-                 WHERE ts1.student_id IN
-                     (SELECT s.id
-                      FROM student s
-                      WHERE MONTH(s.birthdate) = 4)
-                 GROUP BY ts1.teacher_id
-                 HAVING COUNT(ts1.teacher_id) =
-                   ( SELECT DISTINCT COUNT(ts2.teacher_id)
-                    FROM teacher_student ts2
-                    WHERE ts1.teacher_id = ts2.teacher_id)
-          ';
-
-        $teachersAprilStudents = Yii::$app->db->createCommand($teachersAprilStudentsSql)->query()->readAll();
-
-        $teachersAprilStudentsIds = ArrayHelper::getColumn($teachersAprilStudents, function ($element) {
-            return $element['tid'];
-        });
-
         $dataProvider = new ActiveDataProvider([
-            'query' => Teacher::find()->select('id, name, gender, phone, s.cnt as stud_cnt')->where([
-                'in',
-                'id',
-                $teachersAprilStudentsIds
-            ])->join('LEFT JOIN', '(' . $this->studentsCountSql . ') s', 's.tid = id')
+            'query' => Teacher::teachsOnlyAprilBornStudents()
         ]);
 
         $dataProvider->setSort([
