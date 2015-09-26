@@ -55,7 +55,7 @@ class m150919_110016_seed_database extends Migration
 
                 $teacher_id = Yii::$app->db->getLastInsertID();
 
-                $relationsCount = rand(0, MAX_RELATIONS_COUNT);
+                $relationsCount = mt_rand(0, MAX_RELATIONS_COUNT);
 
                 //создаем связи учителей с учениками
                 while ($teacherStudentCountByTeacherIdCommand->bindValue('teacher_id',
