@@ -6,6 +6,7 @@ use app\models\Teacher;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -14,6 +15,14 @@ use yii\web\NotFoundHttpException;
  */
 class TeacherController extends Controller
 {
+    //количество учеников у каждого учителя
+    public $studentsCountSql = '
+            SELECT DISTINCT ts.teacher_id AS tid,
+                    COUNT(ts.student_id) AS cnt
+            FROM teacher_student ts
+            GROUP BY ts.teacher_id
+    ';
+
     public function behaviors()
     {
         return [
@@ -34,19 +43,9 @@ class TeacherController extends Controller
     {
         $title = 'Учителя';
 
-        //количество учеников у каждого учителя
-        $studentsCountSql = '
-            SELECT DISTINCT ts.teacher_id AS t_id,
-                    COUNT(ts.student_id) AS cnt
-            FROM teacher_student ts
-            GROUP BY ts.teacher_id
-        ';
-
         $dataProvider = new ActiveDataProvider([
             'query' => Teacher::find()->select('id, name, gender, phone, s.cnt as stud_cnt')
-                ->join('LEFT JOIN',
-                    '(' . $studentsCountSql . ') s',
-                    's.t_id = id')
+                ->join('LEFT JOIN', '(' . $this->studentsCountSql . ') s', 's.tid = id')
         ]);
 
         $dataProvider->setSort([
@@ -77,14 +76,9 @@ class TeacherController extends Controller
     {
         $title = 'Список учителей, с которыми занимаются только ученики, родившиеся в апреле';
 
-        $sql = '
-            SELECT t.id,
-                   t.name,
-                   t.gender,
-                   t.phone
-            FROM teacher t
-            WHERE t.id IN
-                ( SELECT DISTINCT ts1.teacher_id
+        //учителя, с которыми занимаются только ученики, родившиеся в апреле
+        $teachersAprilStudentsSql = '
+          SELECT DISTINCT ts1.teacher_id AS tid
                  FROM teacher_student ts1
                  WHERE ts1.student_id IN
                      (SELECT s.id
@@ -94,20 +88,40 @@ class TeacherController extends Controller
                  HAVING COUNT(ts1.teacher_id) =
                    ( SELECT DISTINCT COUNT(ts2.teacher_id)
                     FROM teacher_student ts2
-                    WHERE ts1.teacher_id = ts2.teacher_id) )
+                    WHERE ts1.teacher_id = ts2.teacher_id)
           ';
 
+        $teachersAprilStudents = Yii::$app->getDb()->createCommand($teachersAprilStudentsSql)->query()->readAll();
+
+        $teachersAprilStudentsIds = ArrayHelper::getColumn($teachersAprilStudents, function ($element) {
+            return $element['tid'];
+        });
+
         $dataProvider = new ActiveDataProvider([
-            'query' => Teacher::findBySql($sql),
+            'query' => Teacher::find()->select('id, name, gender, phone, s.cnt as stud_cnt')->where([
+                'in',
+                'id',
+                $teachersAprilStudentsIds
+            ])->join('LEFT JOIN', '(' . $this->studentsCountSql . ') s', 's.tid = id')
         ]);
 
         $dataProvider->setSort([
-            'defaultOrder' => ['name' => SORT_ASC]
+            'defaultOrder' => ['name' => SORT_ASC],
+            'attributes' => [
+                'name',
+                'gender',
+                'phone',
+                'students_count' =>
+                    [
+                        'asc' => ['stud_cnt' => SORT_ASC],
+                        'desc' => ['stud_cnt' => SORT_DESC]
+                    ]
+            ]
         ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'title' => $title
+            'title' => $title,
         ]);
     }
 
