@@ -50,14 +50,15 @@ class Teacher extends \yii\db\ActiveRecord
         return [
             [['name', 'gender'], 'required'],
             [['gender'], 'integer', 'min' => 1, 'max' => 2],
-            [['name'], 'string', 'max' => 255],
+            [['name', 'phone'], 'string', 'max' => 255],
             ['students_list', 'each', 'rule' => ['integer']],
             [
                 'phone',
                 'match',
                 'pattern' => '/^[0-9+\(\)#\.\s\/ext-]+$/',
                 'message' => 'Значение «Номер телефона» не является правильным номером телефона.'
-            ]
+            ],
+            [['phone'], 'unique']
         ];
     }
 

@@ -9,9 +9,9 @@ class m150919_083514_create_student_table extends Migration
         $this->createTable('student', [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
-            'email' => $this->string(),
+            'email' => $this->string()->unique(),
             'birthdate' => $this->date()->notNull(),
-            'level' => $this->integer(),
+            'level' => $this->smallInteger(),
         ]);
     }
 

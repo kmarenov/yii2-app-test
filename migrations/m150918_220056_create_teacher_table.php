@@ -9,8 +9,8 @@ class m150918_220056_create_teacher_table extends Migration
         $this->createTable('teacher', [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
-            'gender' => $this->integer()->notNull(),
-            'phone' => $this->string(),
+            'gender' => $this->smallInteger()->notNull(),
+            'phone' => $this->string()->unique(),
         ]);
     }
 
