@@ -7,6 +7,7 @@ use app\models\Teacher;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -137,6 +138,10 @@ class StudentController extends Controller
 
         $twoTeachersMaxStudents = Teacher::getTwoHasMaxCommonStudents();
 
+        $teachers = Teacher::find()->where(['id' => $twoTeachersMaxStudents])->asArray()->all();
+
+        $teachersNames = ArrayHelper::getColumn($teachers, 'name');
+
         $dataProvider = new ActiveDataProvider([
             'query' => Student::commonFromTwoTeachers($twoTeachersMaxStudents)
         ]);
@@ -148,7 +153,7 @@ class StudentController extends Controller
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'title' => $title,
-            'teachers' => $twoTeachersMaxStudents
+            'teachersNames' => $teachersNames
         ]);
     }
 }

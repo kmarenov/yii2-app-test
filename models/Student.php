@@ -41,8 +41,8 @@ class Student extends \yii\db\ActiveRecord
         ';
 
         $commonStudents = Yii::$app->db->createCommand($commonStudentsSql, [
-            'tid1' => $teachers['tid1'],
-            'tid2' => $teachers['tid2'],
+            'tid1' => $teachers[0],
+            'tid2' => $teachers[1],
         ])->query()->readAll();
 
         $commonStudentsIds = ArrayHelper::getColumn($commonStudents, function ($element) {
