@@ -10,7 +10,7 @@
     - [Используя дамп базы данных](#dbdeploy-dump)
 - [Запуск](#launch)
     - [Используя встроенный в PHP веб-сервер](#launch-phpwebserver)
-    - [Используя Vagrant](#launch--vagrant)
+    - [Используя Vagrant](#launch-vagrant)
 
 ## <a name="download"></a> Загрузка
 ### <a name="download-composer"></a> Используя Composer
