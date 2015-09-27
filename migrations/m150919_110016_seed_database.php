@@ -15,37 +15,14 @@ class m150919_110016_seed_database extends Migration
         define('LEVELS_COUNT', 6);
         define('MAX_RELATIONS_COUNT', 50);
 
-        //количество учителей
-        $teacherCountCommand =
-            Yii::$app->db->createCommand('SELECT COUNT(id) as cnt FROM teacher');
-
-        //количество учителей c заданным номером телефона
-        $teacherCountByPhoneCommand =
-            Yii::$app->db->createCommand('SELECT COUNT(id) as cnt FROM teacher WHERE phone = :phone');
-
-        //количество учеников у учителя
-        $teacherStudentCountByTeacherIdCommand =
-            Yii::$app->db->createCommand('SELECT COUNT(id) as cnt FROM teacher_student WHERE teacher_id = :teacher_id');
-
-        //количество связей учителя с заданным учеником
-        $teacherStudentCountByTeacherIdStudentIdCommand =
-            Yii::$app->db->createCommand('SELECT COUNT(id) as cnt FROM teacher_student WHERE teacher_id = :teacher_id AND student_id = :student_id');
-
-        //количество учеников
-        $studentCountCommand =
-            Yii::$app->db->createCommand('SELECT COUNT(id) as cnt FROM student');
-
-        //количество учеников с заданным email
-        $studentCountByEmailCommand =
-            Yii::$app->db->createCommand('SELECT COUNT(id) as cnt FROM student WHERE email = :email');
-
-
-        //заполняем таблицу учителей
-        while ($teacherCountCommand->queryOne()['cnt'] < TEACHERS_COUNT) {
+        $teacherId = 0;
+        $phones = [];
+        $relations = [];
+        while ($teacherId < TEACHERS_COUNT) {
 
             $phone = $faker->phoneNumber;
 
-            if ($teacherCountByPhoneCommand->bindValue('phone', $phone)->queryOne()['cnt'] == 0) {
+            if (!in_array($phone, $phones)) {
 
                 $this->insert('teacher', [
                     'name' => $faker->name,
@@ -53,38 +30,48 @@ class m150919_110016_seed_database extends Migration
                     'phone' => $phone,
                 ]);
 
-                $teacher_id = Yii::$app->db->getLastInsertID();
+                $teacherId++;
+                $phones[] = $phone;
 
-                $relationsCount = mt_rand(0, MAX_RELATIONS_COUNT);
+                $relationsTotalCnt = mt_rand(0, MAX_RELATIONS_COUNT);
 
-                //создаем связи учителей с учениками
-                while ($teacherStudentCountByTeacherIdCommand->bindValue('teacher_id',
-                        $teacher_id)->queryOne()['cnt'] < $relationsCount) {
+                $relationsCnt = 0;
+                $relations[$teacherId] = [];
+                while ($relationsCnt < $relationsTotalCnt) {
 
-                    $attributes = [
-                        'teacher_id' => $teacher_id,
-                        'student_id' => $faker->numberBetween(1, STUDENTS_COUNT)
-                    ];
+                    $studentId = $faker->numberBetween(1, STUDENTS_COUNT);
 
-                    if ($teacherStudentCountByTeacherIdStudentIdCommand->bindValues($attributes)->queryOne()['cnt'] == 0) {
-                        $this->insert('teacher_student', $attributes);
+                    if (!in_array($studentId, $relations[$teacherId])) {
+                        $this->insert('teacher_student', [
+                            'teacher_id' => $teacherId,
+                            'student_id' => $studentId
+                        ]);
+
+                        $relationsCnt++;
+                        $relations[$teacherId][] = $studentId;
                     }
                 }
             }
         }
 
-        //заполняем таблицу учеников
-        while ($studentCountCommand->queryOne()['cnt'] < STUDENTS_COUNT) {
+        unset($phones, $relations);
+
+        $studentId = 0;
+        $emails = [];
+        while ($studentId < STUDENTS_COUNT) {
 
             $email = $faker->email;
 
-            if ($studentCountByEmailCommand->bindValue('email', $email)->queryOne()['cnt'] == 0) {
+            if (!in_array($email, $emails)) {
                 $this->insert('student', [
                     'name' => $faker->name,
                     'email' => $email,
                     'birthdate' => $faker->date(),
                     'level' => $faker->numberBetween(1, LEVELS_COUNT)
                 ]);
+
+                $emails[] = $email;
+                $studentId++;
             }
         }
     }
