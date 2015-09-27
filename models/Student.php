@@ -56,6 +56,12 @@ class Student extends \yii\db\ActiveRecord
         ]);
     }
 
+    public function beforeValidate()
+    {
+        $this->email = filter_var($this->email, FILTER_SANITIZE_EMAIL);
+        return parent::beforeValidate();
+    }
+
     /**
      * @inheritdoc
      */

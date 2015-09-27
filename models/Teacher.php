@@ -98,6 +98,12 @@ class Teacher extends \yii\db\ActiveRecord
         return Yii::$app->db->createCommand($twoTeachersMaxStudentsSql)->query()->read();
     }
 
+    public function beforeValidate()
+    {
+        $this->phone = preg_replace('/[^0-9+\(\)#\.\s\/ext-]/', '', $this->phone);
+        return parent::beforeValidate();
+    }
+
     public function behaviors()
     {
         return [
