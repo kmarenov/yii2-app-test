@@ -1,9 +1,9 @@
 # Yii 2 Test Application
 
 ## Содержание
-- [Загрузка](#%D0%B7%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B0)
-    - [Используя Composer](#используя-composer)
-    - [Используя Git](#используя-git)
+- [Загрузка](#download)
+    - [Используя Composer](#download-composer)
+    - [Используя Git](#download-git)
 - [Настройка соединения с базой данных](#настройка-соединения-с-базой-данных)
 - [Развертывание базы данных](#развертывание-базы-данных)
     - [Используя миграции](#используя-миграции)
@@ -12,14 +12,14 @@
     - [Используя встроенный в PHP веб-сервер](#используя-встроенный-в-php-веб-сервер)
     - [Используя Vagrant](#используя-vagrant)
 
-##Загрузка
-### Используя Composer
+## <a name="download"></a> Загрузка
+### <a name="download-composer"></a> Используя Composer
 Загрузить приложение можно с помощью [Composer](https://getcomposer.org/):
 
 ```
 $ composer create-project --prefer-dist --stability=dev kmarenov/yii2-app-test
 ```
-### Используя Git
+### <a name="download-git"></a> Используя Git
 Также можно клонировать репозиторий проекта с [GitHub](https://github.com/) используя [Git](https://git-scm.com/):
 
 ```
