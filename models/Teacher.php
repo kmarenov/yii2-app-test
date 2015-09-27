@@ -117,14 +117,23 @@ class Teacher extends \yii\db\ActiveRecord
             [['name', 'gender'], 'required'],
             [['gender'], 'integer', 'min' => 1, 'max' => 2],
             [['name', 'phone'], 'string', 'max' => 255],
-            ['students_list', 'each', 'rule' => ['integer']],
+            [
+                'students_list',
+                'each',
+                'rule' => [
+                    'exist',
+                    'targetClass' => Student::className(),
+                    'targetAttribute' => 'id',
+                    'message' => 'Значение «Ученики» содержит ID несуществующего ученика.'
+                ],
+            ],
             [
                 'phone',
                 'match',
                 'pattern' => '/^[0-9+\(\)#\.\s\/ext-]+$/',
                 'message' => 'Значение «Номер телефона» не является правильным номером телефона.'
             ],
-            [['phone'], 'unique']
+            [['phone'], 'unique'],
         ];
     }
 

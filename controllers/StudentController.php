@@ -156,4 +156,23 @@ class StudentController extends Controller
             'teachersNames' => $teachersNames
         ]);
     }
+
+//    public function actionList($q = null, $id = null) {
+//        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+//        $out = ['results' => ['id' => '', 'text' => '']];
+//        if (!is_null($q)) {
+//            $query = new Query();
+//            $query->select('id, name AS text')
+//                ->from('student')
+//                ->where('name LIKE "%' . $q .'%"')
+//                ->limit(20);
+//            $command = $query->createCommand();
+//            $data = $command->queryAll();
+//            $out['results'] = array_values($data);
+//        }
+//        elseif ($id > 0) {
+//            $out['results'] = ['id' => $id, 'text' => Student::find($id)->name];
+//        }
+//        return $out;
+//    }
 }

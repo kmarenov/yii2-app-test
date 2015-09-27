@@ -1,8 +1,7 @@
 <?php
 
-use app\models\Student;
 use app\models\Teacher;
-use yii\helpers\ArrayHelper;
+use unclead\widgets\MultipleInput;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -21,10 +20,46 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'phone') ?>
 
-    <?= $form->field($model, 'students_list')->dropDownList(
-        ArrayHelper::map(Student::find()->orderBy('name')->all(), 'id', 'name'),
-        ['multiple' => true]
-    ) ?>
+    <?php
+
+    //$data = JSON::encode(Student::find()->select(['id', 'name'])->where(['id' => $model->students_list])->orderBy('name')->asArray()->all());
+
+    echo $form->field($model, 'students_list')->widget(MultipleInput::className(), [
+//        'columns' => [
+//            [
+//                'name'  => 'students_list',
+//                'type'  => \kartik\select2\Select2::className(),
+//                'value' => new JsExpression($data),
+//                'options' => [
+//                    //'initValueText' => new JsExpression('function(param) { return {q:params.term}; }'),
+//                    'pluginOptions' => [
+//                        //'allowClear' => true,
+//                        'minimumInputLength' => 3,
+//                        'ajax' => [
+//                            'url' =>  \yii\helpers\Url::to(['student/list']),
+//                            'dataType' => 'json',
+//                            'data' => new JsExpression('function(params) { return {q:params.term}; }'),
+//                            'results' => new JsExpression('
+//                                function (data) {
+//                                            return {
+//                                                results: $.map(data, function (item) {
+//                                                    return {
+//                                                        text: item.name,
+//                                                        id: item.id
+//                                                    }
+//                                                })
+//                                            };
+//                                        }
+//                            ')
+//                        ],
+//                        //'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+//                        //'templateResult' => new JsExpression('function(student) { return student.text; }'),
+//                        //'templateSelection' => new JsExpression('function (student) { return student.text; }'),
+//                    ],
+//                ],
+//            ]
+//        ]
+    ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить',
