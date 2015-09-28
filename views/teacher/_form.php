@@ -41,6 +41,7 @@ use yii\widgets\ActiveForm;
     $data = Json::encode($data);
 
     echo $form->field($model, 'students_list')->widget(MultipleInput::className(), [
+        'allowEmptyList' => true,
         'columns' => [
             [
                 'name' => 'students_list',
