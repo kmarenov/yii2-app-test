@@ -16,7 +16,7 @@
 Для установки сторонних пакетов зависимостей приложения у вас должен быть установлен 
 [Composer](https://getcomposer.org/) с плагином 
 [composer-asset-plugin](https://packagist.org/packages/fxp/composer-asset-plugin), который используется для
-установки пакетов зависимостей из [Bower](http://bower.io/) и [npm](https://www.npmjs.com/)
+установки пакетов зависимостей из [Bower](http://bower.io/) и [npm](https://www.npmjs.com/):
 ```
 $ composer global require "fxp/composer-asset-plugin"
 ```
