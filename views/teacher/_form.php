@@ -49,7 +49,6 @@ use yii\widgets\ActiveForm;
                 'options' => [
                     'pluginOptions' => [
                         'minimumInputLength' => 3,
-                        'allowClear' => true,
                         'ajax' => [
                             'url' => Url::to(['student/list']),
                             'dataType' => 'json',
