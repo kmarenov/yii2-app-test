@@ -157,22 +157,18 @@ class StudentController extends Controller
         ]);
     }
 
-//    public function actionList($q = null, $id = null) {
-//        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-//        $out = ['results' => ['id' => '', 'text' => '']];
-//        if (!is_null($q)) {
-//            $query = new Query();
-//            $query->select('id, name AS text')
-//                ->from('student')
-//                ->where('name LIKE "%' . $q .'%"')
-//                ->limit(20);
-//            $command = $query->createCommand();
-//            $data = $command->queryAll();
-//            $out['results'] = array_values($data);
-//        }
-//        elseif ($id > 0) {
-//            $out['results'] = ['id' => $id, 'text' => Student::find($id)->name];
-//        }
-//        return $out;
-//    }
+    public function actionList($q = null, $id = null)
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = ['results' => ['id' => '', 'text' => '']];
+        if (!is_null($q)) {
+            $data = Student::find()->select('id, name AS text')
+                ->where('name LIKE "%' . $q . '%"')
+                ->limit(20)->asArray()->all();
+            $out['results'] = array_values($data);
+        } elseif ($id > 0) {
+            $out['results'] = ['id' => $id, 'text' => Student::find($id)->name];
+        }
+        return $out;
+    }
 }
